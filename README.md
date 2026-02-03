@@ -61,7 +61,7 @@ appsettings.Development.json
 
 4. Apply database migrations:
 ```
-Update-Database`
+Update-Database
 ```
 5. Run the project
 
