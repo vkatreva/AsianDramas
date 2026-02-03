@@ -1,4 +1,4 @@
-<img width="1559" height="369" alt="image" src="https://github.com/user-attachments/assets/4740b0e9-cbd7-4e78-864f-a89172b3e5c4" /># AsianDramas
+# AsianDramas
 
 AsianDramas is an ASP.NET Core MVC web application for browsing and managing Asian dramas, actors, and user reviews.  
 The project demonstrates a complete MVC architecture with authentication, authorization, and database-driven content.
