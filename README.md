@@ -29,6 +29,11 @@ The project demonstrates a complete MVC architecture with authentication, author
 - Authorization checks ensure users can edit/delete only their own reviews
 - Secure role-based access control
 
+## MyList
+- Personal list for authenticated users
+- Add and remove dramas from MyList
+- User-specific data with authorization checks
+
 
 ## Technologies Used
 
