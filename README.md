@@ -68,19 +68,23 @@ Update-Database
 ## Screenshots
 
 ### Home page
-![Home page](screenshots/Home page.png)
+![Home page](screenshots/Home.png)
 
 ### Home page
-![Home page - level 2 pt1](screenshots/Home page - level 2 pt1.png)
+![Home page - level 2 pt1](screenshots/HomeLevel2Pt1.png)
 
 ### Home page
-![Home page - level 2 pt2](screenshots/Home page - level 2 pt2.png)
+![Home page - level 2 pt2](screenshots/HomeLevel2Pt2.png)
 
 ### Dramas page
-![Dramas page](screenshots/Dramas page.png)
+![Dramas page](screenshots/Dramas.png)
 
 ### Movies page
-![Movies page](screenshots/Movies page.png)
+![Movies page](screenshots/Movies.png)
 
 ### Actors page
-![Actors page](screenshots/Actors page.png)
+![Actors page](screenshots/Actors.png)
+
+### MyList page
+![MyList page](screenshots/MyList.png)
+
