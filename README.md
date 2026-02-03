@@ -3,7 +3,6 @@
 AsianDramas is an ASP.NET Core MVC web application for browsing and managing Asian dramas, actors, and user reviews.  
 The project demonstrates a complete MVC architecture with authentication, authorization, and database-driven content.
 
----
 
 ## Features
 
@@ -12,28 +11,24 @@ The project demonstrates a complete MVC architecture with authentication, author
 - User – search, filter, pagination
 - Admin – full CRUD access
 
----
 
 ### Dramas
 - Drama catalog with detailed pages
 - Genre, region, year, and status information
 - Average rating calculated from user reviews
 
----
 
 ### Actors
 - Actor profiles with personal information
 - Actor-specific reviews
 - Popularity calculation based on activity
 
----
 
 ### Reviews
 - Authenticated users can add reviews
 - Authorization checks ensure users can edit/delete only their own reviews
 - Secure role-based access control
 
----
 
 ## Technologies Used
 
@@ -43,7 +38,6 @@ The project demonstrates a complete MVC architecture with authentication, author
 - MS SQL Server
 - HTML, CSS, JavaScript
 
----
 
 ## Installation & Setup
 
