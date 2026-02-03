@@ -82,9 +82,9 @@ Update-Database
 ### Movies page
 ![Movies page](screenshots/Movies.png)
 
-### Actors page
-![Actors page](screenshots/Actors.png)
-
 ### MyList page
 ![MyList page](screenshots/MyList.png)
+
+### Actors page
+![Actors page](screenshots/Actors.png)
 
