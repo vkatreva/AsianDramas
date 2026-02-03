@@ -67,14 +67,14 @@ Update-Database
 
 ## Screenshots
 
-### Home page
+### Home page - level 0
 ![Home page](screenshots/Home.png)
 
-### Home page
-![Home page - level 2 pt1](screenshots/HomeLevel2Pt1.png)
+### Home page - level 1 - pt.1
+![Home page - level 1 pt1](screenshots/HomeLevel1Pt1.png)
 
-### Home page
-![Home page - level 2 pt2](screenshots/HomeLevel2Pt2.png)
+### Home page -  level 1 - pt.2
+![Home page - level 1 pt2](screenshots/HomeLevel1Pt2.png)
 
 ### Dramas page
 ![Dramas page](screenshots/Dramas.png)
