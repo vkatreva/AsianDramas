@@ -1,4 +1,4 @@
-# AsianDramas
+<img width="1559" height="369" alt="image" src="https://github.com/user-attachments/assets/4740b0e9-cbd7-4e78-864f-a89172b3e5c4" /># AsianDramas
 
 AsianDramas is an ASP.NET Core MVC web application for browsing and managing Asian dramas, actors, and user reviews.  
 The project demonstrates a complete MVC architecture with authentication, authorization, and database-driven content.
@@ -55,10 +55,12 @@ git clone https://github.com/vkatreva/AsianDramas.git
 2. Open the solution in Visual Studio 2022
 
 3. Update the connection string in:
+```
 appsettings.Development.json
+```
 
 4. Apply database migrations:
-Update-Database
+`Update-Database`
 
 5. Run the project
 
