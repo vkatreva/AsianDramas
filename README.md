@@ -66,4 +66,21 @@ Update-Database
 5. Run the project
 
 ## Screenshots
-(Screenshots of the Home page, Drama details, Actor details, and Reviews will be added here.)
+
+### Home page
+![Home page](screenshots/Home page.png)
+
+### Home page
+![Home page - level 2 pt1](screenshots/Home page - level 2 pt1.png)
+
+### Home page
+![Home page - level 2 pt2](screenshots/Home page - level 2 pt2.png)
+
+### Dramas page
+![Dramas page](screenshots/Dramas page.png)
+
+### Movies page
+![Movies page](screenshots/Movies page.png)
+
+### Actors page
+![Actors page](screenshots/Actors page.png)
