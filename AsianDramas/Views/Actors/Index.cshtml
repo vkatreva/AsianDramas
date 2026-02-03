@@ -1,0 +1,139 @@
+﻿@model IEnumerable<AsianDramas.Models.Actor>
+@using System
+
+@{
+    ViewData["Title"] = "Actors";
+
+    string nameFilter = ViewBag.NameFilter as string;
+    string countryFilter = ViewBag.CountryFilter as string;
+    string sortOrder = ViewBag.SortOrder as string ?? "";
+
+    int page = ViewBag.Page != null ? (int)ViewBag.Page : 1;
+    int pageSize = ViewBag.PageSize != null ? (int)ViewBag.PageSize : 12;
+    int totalItems = ViewBag.TotalItems != null ? (int)ViewBag.TotalItems : Model.Count();
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+}
+
+
+<h1 class="text-white mb-4">Actors</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-action="Index" method="get" class="filters-bar">
+        <div class="filters-grid">
+            <div class="filter-field">
+                <label class="filter-label">Name</label>
+                <input type="text"
+                       name="name"
+                       value="@nameFilter"
+                       class="filter-input"
+                       placeholder="Search by name" />
+            </div>
+
+            <div class="filter-field">
+                <label class="filter-label">Nationality</label>
+                <input type="text"
+                       name="country"
+                       value="@countryFilter"
+                       class="filter-input"
+                       placeholder="Search by nationality" />
+            </div>
+
+            <div class="filter-field">
+                <label class="filter-label">Sort</label>
+                <select name="sortOrder" class="filter-select">
+                    <option value="" selected="@(string.IsNullOrEmpty(sortOrder))">Name ↑</option>
+                    <option value="name_desc" selected="@(sortOrder == "name_desc")">Name ↓</option>
+                    <option value="birth" selected="@(sortOrder == "birth")">Birth ↑</option>
+                    <option value="birth_desc" selected="@(sortOrder == "birth_desc")">Birth ↓</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-purple" type="submit">Search</button>
+            </div>
+        </div>
+
+        <input type="hidden" name="pageSize" value="@pageSize" />
+    </form>
+}
+
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn-ghost mb-3" style="margin-bottom:5px;">
+        + Create actor
+    </a>
+}
+
+
+<div class="drama-grid">
+    @foreach (var actor in Model)
+    {
+        var photo = string.IsNullOrEmpty(actor.ImageUrl)
+        ? Url.Content("~/images/avatar-placeholder.png")
+        : actor.ImageUrl;
+
+        <div class="drama-card">
+            <a asp-action="Details" asp-route-id="@actor.Id" class="drama-link">
+                <img src="@photo" class="drama-poster" alt="@actor.Name" />
+
+                <div class="drama-info">
+                    <div class="drama-title">@actor.Name</div>
+                    <div class="drama-meta">@actor.Nationality</div>
+                    <div class="drama-meta">Popularity: @actor.PopularityScore</div>
+                </div>
+            </a>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="mt-2 d-flex gap-2">
+                    <a asp-action="Edit" asp-route-id="@actor.Id" class="btn-ghost btn-sm-ghost">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@actor.Id" class="btn-danger-custom btn-sm-danger">Delete</a>
+                </div>
+
+            }
+        </div>
+    }
+</div>
+
+
+@if (totalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination">
+            <li class="page-item @(page == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-route-page="@(page - 1)"
+                   asp-route-name="@nameFilter"
+                   asp-route-country="@countryFilter"
+                   asp-route-sortOrder="@sortOrder">
+                    Prev
+                </a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == page ? "active" : "")">
+                    <a class="page-link"
+                       asp-route-page="@i"
+                       asp-route-name="@nameFilter"
+                       asp-route-country="@countryFilter"
+                       asp-route-sortOrder="@sortOrder">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(page == totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-route-page="@(page + 1)"
+                   asp-route-name="@nameFilter"
+                   asp-route-country="@countryFilter"
+                   asp-route-sortOrder="@sortOrder">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+}

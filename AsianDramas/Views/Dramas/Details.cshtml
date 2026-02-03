@@ -1,0 +1,361 @@
+﻿@model AsianDramas.Models.ViewModels.DramaDetailsViewModel
+@using System.Security.Claims
+
+@{
+    Layout = "_Layout";
+    var drama = Model.Drama;
+}
+
+<div class="container mt-4 drama-details-page">
+    @{
+        string poster = !string.IsNullOrEmpty(drama.PosterUrl)
+        ? drama.PosterUrl
+        : Url.Content("~/images/placeholder-poster.jpg");
+    }
+
+    <div class="text-center mb-3">
+        <img src="@poster" alt="@drama.Title" class="drama-poster mb-3" />
+    </div>
+
+
+    <h1 class="text-white mb-3">@drama.Title</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="drama-admin-actions">
+            <a asp-action="Edit"
+               asp-route-id="@drama.Id"
+               class="btn-ghost btn-sm-ghost">
+                Edit
+            </a>
+
+            <a asp-action="Delete"
+               asp-route-id="@drama.Id"
+               class="btn-danger-custom btn-sm-danger">
+                Delete
+            </a>
+        </div>
+    }
+
+
+    <div class="mb-4">
+        <span class="badge bg-secondary">@drama.Status</span>
+        <span>@drama.Year • @drama.Region</span>
+    </div>
+
+    <p><strong>Episodes:</strong> @drama.Episodes</p>
+    <p><strong>Rating:</strong> @Model.AverageRating</p>
+    <p><strong>Genre:</strong> @drama.Genre</p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (Model.IsInMyList)
+        {
+            <button type="button" class="btn-ghost mb-3" disabled style="opacity:.75; cursor:not-allowed;">
+                ✓ Added to MyList
+            </button>
+        }
+        else
+        {
+            <form asp-controller="MyList" asp-action="Add" method="post" class="mb-3" style="display:inline;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="dramaId" value="@Model.Drama.Id" />
+                <button type="submit" class="btn-purple">
+                    ＋ Add to MyList
+                </button>
+            </form>
+        }
+    }
+    else
+    {
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn-ghost mb-3">
+            Log in to add to My List
+        </a>
+    }
+
+    <hr />
+
+    <h4>Synopsis</h4>
+    <p>@(string.IsNullOrWhiteSpace(drama.Description) ? "No synopsis available." : drama.Description)</p>
+
+    <hr />
+
+
+
+    <h3>Cast & Crew</h3>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="DramaActors"
+           asp-action="Add"
+           asp-route-dramaId="@Model.Drama.Id"
+           class="btn-purple mb-3">+ Add Actor</a>
+    }
+
+    @if (!Model.Cast.Any())
+    {
+        <p class="text-muted">No cast added yet.</p>
+    }
+    else
+    {
+        var main = Model.Cast.Where(a => (a.RoleLabel ?? "").ToLower().StartsWith("main")).ToList();
+        var support = Model.Cast.Where(a => (a.RoleLabel ?? "").ToLower().StartsWith("support")).ToList();
+        var guest = Model.Cast.Where(a => (a.RoleLabel ?? "").ToLower().StartsWith("guest")).ToList();
+        var cameo = Model.Cast.Where(a => (a.RoleLabel ?? "").ToLower().StartsWith("cameo")).ToList();
+
+        <h4 class="mt-4">Main Role</h4>
+        <div class="cast-row">
+            @foreach (var actor in main)
+            {
+                var parts = (actor.RoleLabel ?? "").Split(':', 2);
+                var roleType = parts[0].Trim();
+                var character = parts.Length > 1 ? parts[1].Trim() : "";
+
+                <div class="cast-card">
+                    <img src="@(actor.ImageUrl ?? Url.Content("~/images/avatar-placeholder.jpg"))" class="cast-card-img" />
+                    <div class="cast-card-info">
+                        <div class="cast-card-name">@actor.Name</div>
+                        @if (!string.IsNullOrEmpty(character))
+                        {
+                            <div class="cast-card-character">@character</div>
+                        }
+                        <div class="cast-card-role">@roleType</div>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="mt-1">
+                                <a asp-controller="DramaActors" asp-action="Edit"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-light me-1">Edit</a>
+
+                                <a asp-controller="DramaActors" asp-action="Delete"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-danger">X</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h4 class="mt-4">Support Role</h4>
+        <div class="cast-row">
+            @foreach (var actor in support)
+            {
+                var parts = (actor.RoleLabel ?? "").Split(':', 2);
+                var roleType = parts[0].Trim();
+                var character = parts.Length > 1 ? parts[1].Trim() : "";
+
+                <div class="cast-card">
+                    <img src="@(actor.ImageUrl ?? Url.Content("~/images/avatar-placeholder.png"))" class="cast-card-img" />
+                    <div class="cast-card-info">
+                        <div class="cast-card-name">@actor.Name</div>
+                        @if (!string.IsNullOrEmpty(character))
+                        {
+                            <div class="cast-card-character">@character</div>
+                        }
+                        <div class="cast-card-role">@roleType</div>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="mt-1">
+                                <a asp-controller="DramaActors" asp-action="Edit"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-light me-1">Edit</a>
+
+                                <a asp-controller="DramaActors" asp-action="Delete"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-danger">X</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h4 class="mt-4">Guest Role</h4>
+        <div class="cast-row">
+            @foreach (var actor in guest)
+            {
+                var parts = (actor.RoleLabel ?? "").Split(':', 2);
+                var roleType = parts[0].Trim();
+                var character = parts.Length > 1 ? parts[1].Trim() : "";
+
+                <div class="cast-card">
+                    <img src="@(actor.ImageUrl ?? Url.Content("~/images/avatar-placeholder.png"))" class="cast-card-img" />
+                    <div class="cast-card-info">
+                        <div class="cast-card-name">@actor.Name</div>
+                        @if (!string.IsNullOrEmpty(character))
+                        {
+                            <div class="cast-card-character">@character</div>
+                        }
+                        <div class="cast-card-role">@roleType</div>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="mt-1">
+                                <a asp-controller="DramaActors" asp-action="Edit"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-light me-1">Edit</a>
+
+                                <a asp-controller="DramaActors" asp-action="Delete"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-danger">X</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h4 class="mt-4">Cameo</h4>
+        <div class="cast-row">
+            @foreach (var actor in cameo)
+            {
+                var parts = (actor.RoleLabel ?? "").Split(':', 2);
+                var roleType = parts[0].Trim();
+                var character = parts.Length > 1 ? parts[1].Trim() : "";
+
+                <div class="cast-card">
+                    <img src="@(actor.ImageUrl ?? Url.Content("~/images/avatar-placeholder.png"))" class="cast-card-img" />
+                    <div class="cast-card-info">
+                        <div class="cast-card-name">@actor.Name</div>
+                        @if (!string.IsNullOrEmpty(character))
+                        {
+                            <div class="cast-card-character">@character</div>
+                        }
+                        <div class="cast-card-role">@roleType</div>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="mt-1">
+                                <a asp-controller="DramaActors" asp-action="Edit"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-light me-1">Edit</a>
+
+                                <a asp-controller="DramaActors" asp-action="Delete"
+                                   asp-route-dramaId="@Model.Drama.Id" asp-route-actorId="@actor.ActorId"
+                                   class="btn btn-sm btn-outline-danger">X</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <hr />
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Reviews"
+           asp-action="Create"
+           asp-route-dramaId="@Model.Drama.Id"
+           class="btn-purple mb-3">
+            + Add Review
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn-ghost mb-3">
+            Log in to write a review
+        </a>
+    }
+
+
+
+    <div class="drama-reviews mt-4">
+        <h4>User Reviews (@Model.Reviews.Count)</h4>
+
+        @if (!Model.Reviews.Any())
+        {
+            <p class="text-muted">No reviews yet.</p>
+        }
+        else
+        {
+            @foreach (var r in Model.Reviews)
+            {
+                var currentUserName = User.Identity?.Name;
+                var currentEmail = User.FindFirstValue(ClaimTypes.Email);
+
+                var isOwner = User.Identity != null
+                && User.Identity.IsAuthenticated
+                && (
+                r.ReviewerName == currentUserName
+                || r.ReviewerName == currentEmail
+                );
+
+
+                <div class="review-item mb-3 pb-3 border-bottom">
+                    <div class="d-flex align-items-center mb-1">
+                        <div>
+                            <div class="fw-bold">@r.ReviewerName</div>
+                            <div class="small text-muted">
+                                @r.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy г. HH:mm")
+                            </div>
+                        </div>
+
+                        <div class="ms-auto text-warning fw-bold">
+                            @r.Rating / 10
+                        </div>
+                    </div>
+
+                    <div class="mt-1">
+                        <span class="star-rating">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                if (i <= r.Rating)
+                                {
+                                    <span>&#9733;</span> @* пълна звезда *@
+                                }
+                                else
+                                {
+                                    <span style="color:#555;">&#9733;</span> @* празна звезда *@
+                                }
+                            }
+                        </span>
+                    </div>
+
+                    <div class="mt-2">
+                        @r.Comment
+                    </div>
+
+                    
+                    @if (isOwner)
+                    {
+                        <div class="mt-2">
+                            <a asp-controller="Reviews"
+                               asp-action="Edit"
+                               asp-route-id="@r.Id"
+                               class="btn-ghost btn-sm-ghost me-2">
+                                Edit
+                            </a>
+
+                            <a asp-controller="Reviews"
+                               asp-action="Delete"
+                               asp-route-id="@r.Id"
+                               class="btn-danger-custom btn-sm-danger">
+                                Delete
+                            </a>
+                        </div>
+
+                        
+
+                    }
+
+
+                </div>
+            }
+        }
+    </div>
+
+
+
+
+
+
+</div>

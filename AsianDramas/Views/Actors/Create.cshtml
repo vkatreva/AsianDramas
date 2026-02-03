@@ -1,0 +1,80 @@
+﻿@model AsianDramas.Models.Actor
+
+@{
+    ViewData["Title"] = "Create actor";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:650px; margin:40px auto;">
+        <h1 class="auth-title">Create actor</h1>
+
+        <form asp-action="Create" method="post" class="auth-form">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Biography" class="form-label"></label>
+                <textarea asp-for="Biography"
+                          class="form-control"
+                          rows="5"
+                          maxlength="200"
+                          placeholder="Short bio (max 200 chars)..."></textarea>
+
+                <div class="d-flex justify-content-between mt-1">
+                    <small class="text-muted">Max 200 characters</small>
+                    <small class="text-muted"><span id="bioCount">0</span>/200</small>
+                </div>
+
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BirthDate" class="form-label"></label>
+                <input asp-for="BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Nationality" class="form-label"></label>
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label"></label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-wide">Create</button>
+                <a asp-action="Index" class="btn-secondary-wide">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        (function () {
+            const ta = document.getElementById("Biography");
+            const out = document.getElementById("bioCount");
+            if (!ta || !out) return;
+
+            const update = () => out.textContent = (ta.value || "").length;
+            ta.addEventListener("input", update);
+            update();
+        })();
+    </script>
+}

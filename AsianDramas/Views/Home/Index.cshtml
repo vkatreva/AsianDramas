@@ -1,0 +1,134 @@
+﻿@model AsianDramas.Models.ViewModels.HomeIndexViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-3">
+
+   
+    @if (Model.FilteredDramas == null)
+    {
+        @if (Model.LatestReleases.Any())
+        {
+            var drama = Model.LatestReleases.First();
+
+            <a asp-controller="Dramas"
+               asp-action="Details"
+               asp-route-id="@drama.Id"
+               class="featured-banner-link">
+
+                <div class="featured-banner">
+                    <img style="object-fit: cover; object-position: top;" src="@(drama.PosterUrl ?? "/images/fallback-poster.jpg")"
+                         alt="@drama.Title" />
+
+                    <div style="color:white;" class="featured-content">
+                        <h1>@drama.Title</h1>
+
+                        <p class="featured-description">
+                            @drama.Description
+                        </p>
+                    </div>
+                </div>
+            </a>
+        }
+
+        <h2 class="mt-4">Latest Releases</h2>
+        <div class="card-grid">
+            @foreach (var drama in Model.LatestReleases)
+            {
+                <div class="drama-card">
+                    <a asp-controller="Dramas" asp-action="Details" asp-route-id="@drama.Id">
+                        <img src="@drama.PosterUrl" />
+                        <div class="drama-card-title">@drama.Title</div>
+                        <div class="muted">@drama.Region • @drama.Year</div>
+                    </a>
+                </div>
+            }
+        </div>
+
+        
+        <h2 class="mt-5">Trending Now</h2>
+        <div class="card-grid">
+            @foreach (var drama in Model.Trending)
+            {
+                <div class="drama-card">
+                    <a asp-controller="Dramas" asp-action="Details" asp-route-id="@drama.Id">
+                        <img src="@drama.PosterUrl" />
+                        <div class="drama-card-title">@drama.Title</div>
+                        <div class="muted">@drama.Region • @drama.Year</div>
+                    </a>
+                </div>
+            }
+        </div>
+
+       
+    }
+
+  
+    else
+    {
+        <h2 class="mt-3">
+            @(
+                    string.IsNullOrEmpty(Model.SelectedRegion)
+                    ? "Filtered Results"
+                    : Model.SelectedRegion + " Dramas"
+                    )
+    </h2>
+
+    @if (!Model.FilteredDramas.Any())
+        {
+            <p class="text-muted">No dramas found.</p>
+        }
+        else
+        {
+            <div class="card-grid mt-3">
+                @foreach (var drama in Model.FilteredDramas)
+                {
+                    <div class="drama-card">
+                        <a asp-controller="Dramas" asp-action="Details" asp-route-id="@drama.Id">
+                            <img src="@drama.PosterUrl" />
+                            <div class="drama-card-title">@drama.Title</div>
+                            <div class="muted">@drama.Region • @drama.Year</div>
+                        </a>
+                    </div>
+                }
+            </div>
+
+           
+            @if (User.Identity.IsAuthenticated && Model.TotalPages > 1)
+            {
+                <div class="pagination-controls text-center mt-4">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <a asp-action="Index"
+                           asp-route-region="@Model.SelectedRegion"
+                           asp-route-genre="@Model.SelectedGenre"
+                           asp-route-status="@Model.SelectedStatus"
+                           asp-route-search="@Model.Search"
+                           asp-route-page="@(Model.PageNumber - 1)"
+                           class="btn btn-secondary me-2">
+                            Previous
+                        </a>
+                    }
+
+                    <span class="text-white">
+                        Page @Model.PageNumber of @Model.TotalPages
+                    </span>
+
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <a asp-action="Index"
+                           asp-route-region="@Model.SelectedRegion"
+                           asp-route-genre="@Model.SelectedGenre"
+                           asp-route-status="@Model.SelectedStatus"
+                           asp-route-search="@Model.Search"
+                           asp-route-page="@(Model.PageNumber + 1)"
+                           class="btn btn-secondary ms-2">
+                            Next
+                        </a>
+                    }
+                </div>
+            }
+        }
+    }
+</div>

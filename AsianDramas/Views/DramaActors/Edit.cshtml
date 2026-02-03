@@ -1,0 +1,57 @@
+﻿@model AsianDramas.Models.ViewModels.DramaActorEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Actor";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:600px; margin:40px auto;">
+        <h1 class="auth-title">Edit Actor in @Model.DramaTitle</h1>
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+
+            
+            <input type="hidden" asp-for="DramaId" />
+            <input type="hidden" asp-for="OriginalActorId" />
+            <input type="hidden" asp-for="DramaTitle" />
+
+            <div class="mb-3">
+                <label asp-for="ActorId" class="form-label">Actor</label>
+                <select asp-for="ActorId"
+                        asp-items="Model.ActorOptions"
+                        class="form-select">
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="RoleType" class="form-label">Role type</label>
+                <select asp-for="RoleType" class="form-select">
+                    <option>Main role</option>
+                    <option>Support role</option>
+                    <option>Guest</option>
+                    <option>Cameo</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CharacterName" class="form-label">Character name</label>
+                <input asp-for="CharacterName" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-controller="Dramas"
+               asp-action="Details"
+               asp-route-id="@Model.DramaId"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

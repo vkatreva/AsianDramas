@@ -1,0 +1,106 @@
+﻿@model AsianDramas.Models.Drama
+
+@{
+    ViewData["Title"] = Model.IsMovie ? "Edit Movie" : "Edit Drama";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card auth-card-wide">
+        <h1 class="auth-title">@ViewData["Title"]</h1>
+
+        <form asp-action="Edit" method="post" class="dw-form">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IsMovie" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="dw-field">
+                <label asp-for="Title" class="dw-label"></label>
+                <input asp-for="Title" class="dw-input" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="Description" class="dw-label"></label>
+                <textarea asp-for="Description" rows="5" class="dw-textarea"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="ReleaseDate" class="dw-label"></label>
+                <input asp-for="ReleaseDate" type="date" class="dw-input" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="Episodes" class="dw-label"></label>
+                <input asp-for="Episodes" class="dw-input" />
+                <span asp-validation-for="Episodes" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="Region" class="dw-label"></label>
+                <select asp-for="Region"
+                        class="dw-select"
+                        asp-items="Html.GetEnumSelectList<AsianDramas.Models.Drama.DramaRegion>()">
+                </select>
+                <span asp-validation-for="Region" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="Genre" class="dw-label"></label>
+                <select asp-for="Genre" class="dw-select">
+                    @foreach (var g in (List<string>)ViewBag.Genres)
+                    {
+                        <option value="@g" selected="@(Model.Genre == g)">@g</option>
+                    }
+                </select>
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="Status" class="dw-label"></label>
+                <select asp-for="Status" class="dw-select">
+                    @foreach (var s in (List<string>)ViewBag.Statuses)
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="dw-field">
+                <label asp-for="PosterUrl" class="dw-label"></label>
+                <input asp-for="PosterUrl" class="dw-input" />
+                <span asp-validation-for="PosterUrl" class="text-danger"></span>
+            </div>
+
+            <div class="dw-actions">
+                <button type="submit" class="btn-purple btn-wide">
+                    Save changes
+                </button>
+
+                @if (Model.IsMovie)
+                {
+                    <a asp-controller="Movies" asp-action="Index" class="btn-ghost">
+                        Cancel
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="All" class="btn-ghost">
+                        Cancel
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

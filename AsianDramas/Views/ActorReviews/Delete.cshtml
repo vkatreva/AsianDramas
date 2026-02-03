@@ -1,0 +1,49 @@
+﻿@model AsianDramas.Models.ActorReview
+
+@{
+    ViewData["Title"] = "Delete review";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card review-card">
+        <h1 class="auth-title">Delete review</h1>
+
+        <p class="text-muted">
+            Are you sure you want to delete this review for
+            <strong>@Model.Actor?.Name</strong>?
+        </p>
+
+        <div class="review-preview">
+            <div class="review-preview-row">
+                <strong>Rating:</strong> @Model.Rating / 10
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Comment))
+            {
+                <div class="review-preview-row">
+                    <strong>Comment:</strong> @Model.Comment
+                </div>
+            }
+
+            <div class="review-preview-row text-muted">
+                <strong>Date:</strong> @Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy 'г.' HH:mm")
+            </div>
+        </div>
+
+        <form asp-controller="ActorReviews" asp-action="Delete" method="post" class="review-actions">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <button type="submit" class="auth-btn-danger review-submit">
+                Yes, delete
+            </button>
+
+            <a asp-controller="Actors"
+               asp-action="Details"
+               asp-route-id="@Model.ActorId"
+               class="btn-ghost">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>

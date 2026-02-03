@@ -1,0 +1,55 @@
+﻿@model AsianDramas.Models.ViewModels.DramaActorAddViewModel
+
+@{
+    ViewData["Title"] = "Add Actor";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:600px; margin:40px auto;">
+        <h1 class="auth-title">Add Actor to @ViewBag.DramaTitle</h1>
+
+        <form asp-action="Add" method="post">
+            @Html.AntiForgeryToken()
+
+            <input asp-for="DramaId" type="hidden" />
+
+            <div class="mb-3">
+                <label asp-for="ActorId" class="form-label"></label>
+                <select asp-for="ActorId" asp-items="Model.ActorOptions" class="form-select"></select>
+                <span asp-validation-for="ActorId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="RoleType" class="form-label"></label>
+                <select asp-for="RoleType" class="form-select">
+                    <option value="">-- choose role type --</option>
+                    <option>Main role</option>
+                    <option>Support role</option>
+                    <option>Guest</option>
+                    <option>Cameo</option>
+                </select>
+                <span asp-validation-for="RoleType" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CharacterName" class="form-label"></label>
+                <input asp-for="CharacterName" class="form-control" />
+                <span asp-validation-for="CharacterName" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add</button>
+            <a asp-controller="Dramas"
+               asp-action="Details"
+               asp-route-id="@Model.DramaId"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

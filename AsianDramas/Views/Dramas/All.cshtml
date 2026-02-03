@@ -1,0 +1,128 @@
+﻿@model AsianDramas.Models.ViewModels.DramaAllViewModel
+@using AsianDramas.Models
+
+
+@{
+    ViewData["Title"] = "All Dramas";
+
+    
+}
+
+<h1 class="mb-4">Dramas</h1>
+
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="get" class="filters-bar">
+        <div class="filters-grid">
+            <div class="filter-field">
+                <label class="filter-label">Title</label>
+                <input name="searchTitle" value="@Model.SearchTitle" class="filter-input" placeholder="Search title..." />
+            </div>
+
+            <div class="filter-field">
+                <label class="filter-label">Region</label>
+                <select name="region" class="filter-select">
+                    <option value="">All</option>
+                    @foreach (var r in Model.RegionOptions)
+                    {
+                        <option value="@r" selected="@(Model.Region == r)">@r</option>
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label class="filter-label">Sort</label>
+                <select name="sortOrder" class="filter-select">
+                    <option value="title_asc" selected="@(Model.SortOrder == "title_asc")">Title (A-Z)</option>
+                    <option value="title_desc" selected="@(Model.SortOrder == "title_desc")">Title (Z-A)</option>
+                    <option value="year_desc" selected="@(Model.SortOrder == "year_desc")">Year (newest)</option>
+                    <option value="year_asc" selected="@(Model.SortOrder == "year_asc")">Year (oldest)</option>
+                    <option value="rating_desc" selected="@(Model.SortOrder == "rating_desc")">Rating (high)</option>
+                    <option value="rating_asc" selected="@(Model.SortOrder == "rating_asc")">Rating (low)</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-purple" type="submit">Apply</button>
+            </div>
+        </div>
+
+        <input type="hidden" name="pageSize" value="@Model.PageSize" />
+    </form>
+}
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn-ghost mb-3" style="margin-bottom:5px;">
+        + Create drama
+    </a>
+}
+
+
+
+<div class="card-grid">
+    @foreach (var d in Model.Items)
+    {
+        var poster = string.IsNullOrEmpty(d.PosterUrl)
+        ? Url.Content("~/images/fallback-poster.jpg")
+        : d.PosterUrl;
+
+        <div class="drama-card">
+            <a asp-action="Details" asp-route-id="@d.Id">
+                <img src="@poster" alt="@d.Title" />
+                <div class="drama-card-title">@d.Title</div>
+                <div class="muted">@d.Region • @d.Year</div>
+            </a>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="mt-1">
+                    <a asp-action="Edit"
+                       asp-route-id="@d.Id"
+                       class="btn btn-sm btn-outline-light me-2">Edit</a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@d.Id"
+                       class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (User.Identity.IsAuthenticated && Model.TotalPages > 1)
+{
+    <div class="pagination-controls">
+        @if (Model.Page > 1)
+        {
+            <a asp-action="All"
+               asp-route-page="@(Model.Page - 1)"
+               asp-route-pageSize="@Model.PageSize"
+               asp-route-searchTitle="@Model.SearchTitle"
+               asp-route-region="@Model.Region"
+               asp-route-sortOrder="@Model.SortOrder"
+               class="btn btn-secondary me-2">
+                Previous
+            </a>
+        }
+
+        <span class="text-white">
+            Page @Model.Page of @Model.TotalPages
+        </span>
+
+        @if (Model.Page < Model.TotalPages)
+        {
+            <a asp-action="All"
+               asp-route-page="@(Model.Page + 1)"
+               asp-route-pageSize="@Model.PageSize"
+               asp-route-searchTitle="@Model.SearchTitle"
+               asp-route-region="@Model.Region"
+               asp-route-sortOrder="@Model.SortOrder"
+               class="btn btn-secondary ms-2">
+                Next
+            </a>
+        }
+    </div>
+}

@@ -1,0 +1,66 @@
+﻿@model AsianDramas.Models.ViewModels.ReviewCreateViewModel
+
+@{
+    ViewData["Title"] = "Add Review";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card review-card">
+        <h1 class="auth-title">Add Review for @ViewBag.DramaTitle</h1>
+
+        <form asp-action="Create" method="post" class="review-form">
+            @Html.AntiForgeryToken()
+
+            <input asp-for="DramaId" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="review-field">
+                <label asp-for="Rating" class="review-label">Rating</label>
+
+                <div class="rating-row">
+                    <input asp-for="Rating"
+                           class="review-input"
+                           type="number"
+                           min="1"
+                           max="10"
+                           placeholder="1-10" />
+
+                    <div class="review-hint">Rating from 1 to 10</div>
+                </div>
+
+                <span asp-validation-for="Rating" class="validation-error"></span>
+            </div>
+
+            <div class="review-field">
+                <label asp-for="Comment" class="review-label">Comment</label>
+
+                <textarea asp-for="Comment"
+                          class="review-textarea"
+                          rows="4"
+                          placeholder="Write your review..."></textarea>
+
+                <span asp-validation-for="Comment" class="validation-error"></span>
+            </div>
+
+            <div class="review-actions">
+                <button type="submit" class="btn-purple review-submit">
+                    Submit
+                </button>
+
+                <a asp-controller="Dramas"
+                   asp-action="Details"
+                   asp-route-id="@Model.DramaId"
+                   class="btn-ghost">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

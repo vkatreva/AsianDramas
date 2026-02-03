@@ -1,0 +1,62 @@
+﻿@model AsianDramas.Models.Actor
+
+@{
+    ViewData["Title"] = "Edit actor";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:650px; margin:40px auto;">
+        <h1 class="auth-title">Edit actor</h1>
+
+        <form asp-action="Edit" method="post" class="auth-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Actor name..." />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Biography" class="form-label"></label>
+                <textarea asp-for="Biography"
+                          class="form-control"
+                          rows="5"
+                          placeholder="Short bio..."></textarea>
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BirthDate" class="form-label"></label>
+                <input asp-for="BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Nationality" class="form-label"></label>
+                <input asp-for="Nationality" class="form-control" placeholder="e.g. Korean" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label"></label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-wide">Save changes</button>
+                <a asp-action="Index" class="btn-secondary-wide">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

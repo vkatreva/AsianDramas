@@ -1,0 +1,38 @@
+﻿@model AsianDramas.Models.ViewModels.DramaActorEditViewModel
+
+@{
+    ViewData["Title"] = "Remove actor";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:600px; margin:40px auto;">
+        <h1 class="auth-title">Remove actor from @ViewBag.DramaTitle</h1>
+
+        <p>Are you sure you want to remove this actor from the cast?</p>
+
+        <dl class="row">
+            <dt class="col-sm-3">Actor</dt>
+            <dd class="col-sm-9">@Model.ActorName</dd>
+
+            <dt class="col-sm-3">Character</dt>
+            <dd class="col-sm-9">@Model.CharacterName</dd>
+
+            <dt class="col-sm-3">Role type</dt>
+            <dd class="col-sm-9">@Model.RoleType</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="DramaId" />
+            <input type="hidden" asp-for="ActorId" />
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-controller="Dramas"
+               asp-action="Details"
+               asp-route-id="@Model.DramaId"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>

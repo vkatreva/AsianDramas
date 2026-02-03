@@ -1,0 +1,46 @@
+﻿@model AsianDramas.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <h1 class="auth-title">Login</h1>
+
+        <form asp-action="Login" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="auth-field">
+                <label asp-for="Email" class="auth-label"></label>
+                <input asp-for="Email" class="auth-input" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="auth-field">
+                <label asp-for="Password" class="auth-label"></label>
+                <input asp-for="Password" class="auth-input" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="auth-field d-flex align-items-center">
+                <input asp-for="RememberMe" class="auth-checkbox" />
+                <label asp-for="RememberMe" class="auth-label"></label>
+            </div>
+
+            <button type="submit" class="auth-btn-primary">Login</button>
+
+            <p class="auth-switch">
+                Don't have an account? <a asp-action="Register">Create one</a>
+            </p>
+        </form>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

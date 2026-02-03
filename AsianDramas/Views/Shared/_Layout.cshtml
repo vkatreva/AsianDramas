@@ -1,0 +1,166 @@
+﻿@using AsianDramas.Models.ViewModels
+@using AsianDramas.Models
+
+@{
+    var homeModel = Model as HomeIndexViewModel;
+    var dramasAllModel = Model as DramaAllViewModel;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - AsianDramas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/mycss.css" rel="stylesheet" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="layout-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="sidebar-logo">
+                    <i class="fa-solid fa-film"></i>
+                    <span>AsianDramas</span>
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="sidebar-search">
+                        <form asp-controller="Home" asp-action="Index" method="get" class="search-form">
+                            <input type="text" name="search" placeholder="Search for dramas..."
+                                   value="@(homeModel?.Search ?? "")" class="form-control" />
+                            <button type="submit" class="btn-purple">Search</button>
+                        </form>
+                    </div>
+                }
+
+
+
+                <nav class="sidebar-nav">
+                    <a asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i> Home</a>
+                    <a asp-controller="Dramas" asp-action="All">
+                        <i class="fa-solid fa-clapperboard"></i>
+                        <span>Dramas</span>
+                    </a>
+
+                    <a asp-controller="Movies" asp-action="Index">
+                        <i class="fa-solid fa-film"></i>
+                        <span>Movies</span>
+                    </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="MyList" asp-action="Index">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>My List</span>
+                        </a>
+                    }
+
+
+                    <a asp-controller="Actors" asp-action="Index">
+                        <i class="fa-solid fa-user"></i>
+                        Actors
+                    </a> 
+
+                </nav>
+                <div class="sidebar-section-title">Account</div>
+                <nav class="sidebar-nav small">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span>Hello, @User.Identity.Name</span>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="btn btn-link p-0 text-start">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </a>
+                        <a asp-controller="Account" asp-action="Register">
+                            <i class="fa-solid fa-user-plus"></i> Register
+                        </a>
+                    }
+                </nav>
+               
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="sidebar-section-title">Regions</div>
+                    <nav class="sidebar-nav small">
+                        @foreach (var r in Enum.GetNames(typeof(Drama.DramaRegion)))
+                        {
+                            var isSelected = (homeModel != null && homeModel.SelectedRegion == r) ? "active" : "";
+                            <a asp-controller="Home" asp-action="Index" asp-route-region="@r" class="@isSelected">@r</a>
+                        }
+                    </nav>
+                }
+
+
+            @if (homeModel != null && User.Identity.IsAuthenticated)
+            {
+                <div class="filter-group">
+                    <form asp-controller="Home" asp-action="Index" method="get" class="filter-form">
+                        <input type="hidden" name="region" value="@homeModel.SelectedRegion" />
+
+                        <label>Genre</label>
+                            <select name="genre" class="filter-select">
+                            <option value="">All genres</option>
+                            @foreach (var g in homeModel.GenreOptions)
+                            {
+                                if (homeModel.SelectedGenre == g)
+                                {
+                                    @:
+                                    <option value="@g" selected>@g</option>
+                                }
+                                else
+                                {
+                                    @:
+                                    <option value="@g">@g</option>
+                                }
+                            }
+                        </select>
+
+                        <label>Status</label>
+                            <select name="status" class="filter-select">
+                            <option value="">All status</option>
+                            @foreach (var s in homeModel.StatusOptions)
+                            {
+                                if (homeModel.SelectedStatus == s)
+                                {
+                                    @:
+                                    <option value="@s" selected>@s</option>
+                                }
+                                else
+                                {
+                                    @:
+                                    <option value="@s">@s</option>
+                                }
+                            }
+                        </select>
+
+                        <button type="submit" class="btn-purple">Apply Filters</button>
+                    </form>
+                </div>
+            }
+        </aside>
+
+        
+        <main class="main-content">
+            @RenderBody()
+        </main>
+
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

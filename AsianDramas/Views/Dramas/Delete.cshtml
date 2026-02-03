@@ -1,0 +1,29 @@
+﻿@model AsianDramas.Models.Drama
+
+@{
+    ViewData["Title"] = "Delete Drama";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:600px; margin:40px auto;">
+        <h1 class="auth-title text-danger">Delete @(Model.IsMovie ? "Movie" : "Drama")</h1>
+
+        <p>Are you sure you want to delete <strong>@Model.Title</strong>?</p>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+
+            @if (Model.IsMovie)
+            {
+                <a asp-controller="Movies" asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+            }
+            else
+            {
+                <a asp-action="All" class="btn btn-secondary ms-2">Cancel</a>
+            }
+        </form>
+    </div>
+</div>

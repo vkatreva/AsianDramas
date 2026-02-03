@@ -1,0 +1,120 @@
+﻿@model AsianDramas.Models.ViewModels.MyListIndexViewModel
+@using AsianDramas.Models
+
+@{
+    ViewData["Title"] = "My List";
+}
+
+<div class="container mt-4 text-white">
+    <h2>My List</h2>
+    <p class="text-muted">Dramas you have added to your list.</p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form method="get" class="filters-bar">
+            <div class="filters-grid">
+                <div class="filter-field">
+                    <label class="filter-label">Title</label>
+                    <input name="searchTitle"
+                           value="@Model.SearchTitle"
+                           class="filter-input"
+                           placeholder="Search title..." />
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">Status</label>
+                    <select name="status" class="filter-select">
+                        <option value="">All</option>
+                        @foreach (var s in Enum.GetNames(typeof(MyListStatus)))
+                        {
+                            <option value="@s" selected="@(Model.Status == s)">@s</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">Sort</label>
+                    <select name="sortOrder" class="filter-select">
+                        <option value="added_desc" selected="@(Model.SortOrder == "added_desc")">Newest added</option>
+                        <option value="added_asc" selected="@(Model.SortOrder == "added_asc")">Oldest added</option>
+                        <option value="title_asc" selected="@(Model.SortOrder == "title_asc")">Title (A-Z)</option>
+                        <option value="title_desc" selected="@(Model.SortOrder == "title_desc")">Title (Z-A)</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn-purple" type="submit">Apply</button>
+                </div>
+            </div>
+
+            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+        </form>
+    }
+
+
+    @if (!Model.Items.Any())
+    {
+        <p class="text-muted mt-3">You haven't added any dramas yet.</p>
+    }
+    else
+    {
+        <div class="card-grid mt-3">
+            @foreach (var drama in Model.Items)
+            {
+                <div class="drama-card">
+                    <a asp-controller="Dramas" asp-action="Details" asp-route-id="@drama.Id">
+                        <img src="@drama.PosterUrl" alt="@drama.Title" />
+                        <div class="drama-card-title">@drama.Title</div>
+                        <div class="muted">@drama.Region • @drama.Year</div>
+                    </a>
+
+                    <div class="muted">
+                        My status: @drama.MyListStatus
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(drama.MyListNote))
+                    {
+                        <div class="muted">Note: @drama.MyListNote</div>
+                    }
+
+                    <a asp-controller="MyList"
+                       asp-action="Edit"
+                       asp-route-id="@drama.MyListItemId"
+                       class="btn btn-sm btn-outline-light mt-2">
+                        Edit
+                    </a>
+
+                    <form asp-controller="MyList" asp-action="Remove" method="post" class="mt-2">
+                        <input type="hidden" name="dramaId" value="@drama.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-light">
+                            Remove
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+       
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination">
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        <li class="page-item @(p == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@p"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-searchTitle="@Model.SearchTitle"
+                               asp-route-status="@Model.Status"
+                               asp-route-sortOrder="@Model.SortOrder">
+                                @p
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>
