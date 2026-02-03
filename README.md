@@ -48,9 +48,10 @@ The project demonstrates a complete MVC architecture with authentication, author
 
 ### Steps
 
-1. Clone the repository: 
+1. Clone the repository:
+```
 git clone https://github.com/vkatreva/AsianDramas.git
-
+```
 2. Open the solution in Visual Studio 2022
 
 3. Update the connection string in:
